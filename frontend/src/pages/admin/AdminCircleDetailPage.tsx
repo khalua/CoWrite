@@ -22,7 +22,7 @@ export function AdminCircleDetailPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-purple-600 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -30,8 +30,8 @@ export function AdminCircleDetailPage() {
   if (error || !circle) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-600 mb-4">{error || 'Circle not found'}</p>
-        <Link to="/admin/circles" className="text-purple-600 hover:underline">
+        <p className="text-red-400 mb-4">{error || 'Circle not found'}</p>
+        <Link to="/admin/circles" className="text-green-500 hover:text-green-400">
           Back to Circles
         </Link>
       </div>
@@ -42,16 +42,16 @@ export function AdminCircleDetailPage() {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <Link to="/admin/circles" className="text-purple-600 hover:underline text-sm">
+        <Link to="/admin/circles" className="text-green-500 hover:text-green-400 text-sm">
           &larr; Back to Circles
         </Link>
       </div>
 
       {/* Circle Info */}
-      <div className="bg-white rounded-2xl shadow-sm p-8 mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{circle.name}</h1>
+      <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8 mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">{circle.name}</h1>
         {circle.description && (
-          <p className="text-gray-600 mb-6">{circle.description}</p>
+          <p className="text-gray-400 mb-6">{circle.description}</p>
         )}
 
         <div className="grid md:grid-cols-3 gap-6 text-sm">
@@ -59,20 +59,20 @@ export function AdminCircleDetailPage() {
             <p className="text-gray-500">Created by</p>
             <Link
               to={`/admin/users/${circle.creator.id}`}
-              className="font-medium text-purple-600 hover:underline"
+              className="font-medium text-green-500 hover:text-green-400"
             >
               {circle.creator.name}
             </Link>
           </div>
           <div>
             <p className="text-gray-500">Created</p>
-            <p className="font-medium text-gray-900">
+            <p className="font-medium text-white">
               {new Date(circle.created_at).toLocaleDateString()}
             </p>
           </div>
           <div>
             <p className="text-gray-500">Stats</p>
-            <p className="text-gray-900">
+            <p className="text-white">
               {circle.members_count} members &middot; {circle.stories_count} stories
             </p>
           </div>
@@ -81,8 +81,8 @@ export function AdminCircleDetailPage() {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Members */}
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6">
+          <h2 className="text-xl font-bold text-white mb-4">
             Members ({circle.members.length})
           </h2>
 
@@ -91,22 +91,22 @@ export function AdminCircleDetailPage() {
               <Link
                 key={member.id}
                 to={`/admin/users/${member.user_id}`}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition"
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-700 transition"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white font-medium">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white font-medium">
                     {member.user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{member.user.name}</p>
+                    <p className="font-medium text-white">{member.user.name}</p>
                     <p className="text-sm text-gray-500">{member.user.email}</p>
                   </div>
                 </div>
                 <span
                   className={`px-2 py-1 text-xs font-semibold rounded ${
                     member.role === 'admin'
-                      ? 'bg-purple-100 text-purple-700'
-                      : 'bg-gray-100 text-gray-600'
+                      ? 'bg-green-900/50 text-green-400'
+                      : 'bg-gray-700 text-gray-400'
                   }`}
                 >
                   {member.role}
@@ -117,8 +117,8 @@ export function AdminCircleDetailPage() {
         </div>
 
         {/* Stories */}
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6">
+          <h2 className="text-xl font-bold text-white mb-4">
             Stories ({circle.stories.length})
           </h2>
 
@@ -127,11 +127,11 @@ export function AdminCircleDetailPage() {
               <Link
                 key={story.id}
                 to={`/admin/stories/${story.id}`}
-                className="block p-3 rounded-lg hover:bg-gray-50 transition"
+                className="block p-3 rounded-lg hover:bg-gray-700 transition"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium text-gray-900">{story.title}</p>
+                    <p className="font-medium text-white">{story.title}</p>
                     <p className="text-sm text-gray-500">
                       {story.contributions_count} contributions
                     </p>
@@ -139,8 +139,8 @@ export function AdminCircleDetailPage() {
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded ${
                       story.status === 'active'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-green-900/50 text-green-400'
+                        : 'bg-gray-700 text-gray-400'
                     }`}
                   >
                     {story.status}

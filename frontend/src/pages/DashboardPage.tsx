@@ -18,17 +18,25 @@ export function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/dashboard" className="text-2xl font-bold text-purple-600">
+          <Link to="/dashboard" className="text-2xl font-bold text-green-500">
             CoWrite
           </Link>
           <div className="flex items-center gap-4">
-            <span className="text-gray-600">Hi, {user?.name}</span>
+            {user?.is_super_admin && (
+              <Link
+                to="/admin"
+                className="px-3 py-1 bg-red-900/50 text-red-400 text-sm font-medium rounded hover:bg-red-900/70 transition"
+              >
+                Admin
+              </Link>
+            )}
+            <span className="text-gray-400">Hi, {user?.name}</span>
             <button
               onClick={() => logout()}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-400 hover:text-gray-200"
             >
               Log out
             </button>
@@ -38,10 +46,10 @@ export function DashboardPage() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Your Circles</h1>
+          <h1 className="text-3xl font-bold text-white">Your Circles</h1>
           <Link
             to="/create-circle"
-            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
+            className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
           >
             + Create Circle
           </Link>
@@ -49,18 +57,18 @@ export function DashboardPage() {
 
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-purple-600 border-t-transparent rounded-full mx-auto" />
+            <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full mx-auto" />
           </div>
         ) : circles.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
+          <div className="text-center py-16 bg-gray-800 rounded-2xl border border-gray-700">
             <div className="text-6xl mb-4">🔮</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">No circles yet</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-2xl font-bold text-white mb-2">No circles yet</h2>
+            <p className="text-gray-400 mb-6">
               Create your first circle and invite friends to start writing together.
             </p>
             <Link
               to="/create-circle"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
             >
               Create Your First Circle
             </Link>
@@ -71,11 +79,11 @@ export function DashboardPage() {
               <Link
                 key={circle.id}
                 to={`/circles/${circle.id}`}
-                className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition"
+                className="bg-gray-800 rounded-xl border border-gray-700 p-6 hover:border-gray-600 transition"
               >
-                <h2 className="text-xl font-bold text-gray-900 mb-2">{circle.name}</h2>
+                <h2 className="text-xl font-bold text-white mb-2">{circle.name}</h2>
                 {circle.description && (
-                  <p className="text-gray-600 mb-4 line-clamp-2">{circle.description}</p>
+                  <p className="text-gray-400 mb-4 line-clamp-2">{circle.description}</p>
                 )}
                 <div className="flex justify-between text-sm text-gray-500">
                   <span>{circle.members.length} members</span>

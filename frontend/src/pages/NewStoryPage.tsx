@@ -52,10 +52,10 @@ export function NewStoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
-          <Link to="/dashboard" className="text-2xl font-bold text-purple-600">
+          <Link to="/dashboard" className="text-2xl font-bold text-green-500">
             CoWrite
           </Link>
         </div>
@@ -64,26 +64,26 @@ export function NewStoryPage() {
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Link
           to={`/circles/${circleId}`}
-          className="text-purple-600 hover:text-purple-800 mb-6 inline-block"
+          className="text-green-500 hover:text-green-400 mb-6 inline-block"
         >
           ← Back to circle
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-sm p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Start a New Story</h1>
-          <p className="text-gray-600 mb-8">
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Start a New Story</h1>
+          <p className="text-gray-400 mb-8">
             Choose a prompt or write your own opening to begin your collaborative story.
           </p>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg mb-6">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-2">
                 Story title *
               </label>
               <input
@@ -91,7 +91,7 @@ export function NewStoryPage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
                 placeholder="The Mysterious Letter"
                 required
               />
@@ -104,8 +104,8 @@ export function NewStoryPage() {
                   onClick={() => setUsePrompt(true)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition ${
                     usePrompt
-                      ? 'bg-purple-100 text-purple-700 border-2 border-purple-600'
-                      : 'bg-gray-100 text-gray-600 border-2 border-transparent'
+                      ? 'bg-green-900/50 text-green-400 border-2 border-green-500'
+                      : 'bg-gray-700 text-gray-400 border-2 border-transparent'
                   }`}
                 >
                   Use a Prompt
@@ -115,8 +115,8 @@ export function NewStoryPage() {
                   onClick={() => setUsePrompt(false)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition ${
                     !usePrompt
-                      ? 'bg-purple-100 text-purple-700 border-2 border-purple-600'
-                      : 'bg-gray-100 text-gray-600 border-2 border-transparent'
+                      ? 'bg-green-900/50 text-green-400 border-2 border-green-500'
+                      : 'bg-gray-700 text-gray-400 border-2 border-transparent'
                   }`}
                 >
                   Write My Own
@@ -132,11 +132,11 @@ export function NewStoryPage() {
                       onClick={() => setSelectedPrompt(prompt)}
                       className={`w-full text-left p-4 rounded-lg border-2 transition ${
                         selectedPrompt === prompt
-                          ? 'border-purple-600 bg-purple-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-green-500 bg-green-900/30'
+                          : 'border-gray-600 hover:border-gray-500'
                       }`}
                     >
-                      <p className="text-gray-800 italic">"{prompt}"</p>
+                      <p className="text-gray-300 italic">"{prompt}"</p>
                     </button>
                   ))}
                 </div>
@@ -145,7 +145,7 @@ export function NewStoryPage() {
                   value={customContent}
                   onChange={(e) => setCustomContent(e.target.value)}
                   rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition resize-none"
                   placeholder="Write the opening of your story..."
                 />
               )}
@@ -154,7 +154,7 @@ export function NewStoryPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+              className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
             >
               {isLoading ? 'Creating...' : 'Start Story'}
             </button>

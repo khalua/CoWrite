@@ -1,4 +1,4 @@
-# Create super admin account
+# Create super admin account in dev
 admin_email = ENV.fetch("ADMIN_EMAIL", "admin@cowrite.com")
 admin_password = ENV.fetch("ADMIN_PASSWORD", "password123")
 
@@ -9,11 +9,14 @@ admin.assign_attributes(
   is_super_admin: true
 )
 
-if admin.new_record?
-  admin.save!
-  puts "Created super admin account: #{admin_email}"
+if admin.save
+  if admin.previously_new_record?
+    puts "Created super admin account: #{admin_email}"
+  else
+    puts "Updated super admin account: #{admin_email}"
+  end
 else
-  puts "Super admin already exists: #{admin_email}"
+  puts "Failed to save admin: #{admin.errors.full_messages.join(', ')}"
 end
 
 # Development seed data

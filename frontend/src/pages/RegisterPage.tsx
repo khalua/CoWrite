@@ -55,24 +55,24 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
-        <Link to="/" className="text-purple-600 hover:text-purple-800 mb-6 inline-block">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-700">
+        <Link to="/" className="text-green-500 hover:text-green-400 mb-6 inline-block">
           ← Back to home
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Create your account</h1>
-        <p className="text-gray-600 mb-8">Join CoWrite and start creating stories together.</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Create your account</h1>
+        <p className="text-gray-400 mb-8">Join CoWrite and start creating stories together.</p>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg mb-6">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
               Your name
             </label>
             <input
@@ -80,14 +80,14 @@ export function RegisterPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
               placeholder="Alex Writer"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
               Email
             </label>
             <input
@@ -95,14 +95,14 @@ export function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
               placeholder="you@example.com"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
               Password
             </label>
             <input
@@ -110,7 +110,7 @@ export function RegisterPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
               placeholder="At least 8 characters"
               required
               minLength={8}
@@ -118,7 +118,7 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="passwordConfirm" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="passwordConfirm" className="block text-sm font-medium text-gray-300 mb-2">
               Confirm password
             </label>
             <input
@@ -126,7 +126,7 @@ export function RegisterPage() {
               type="password"
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
               placeholder="Confirm your password"
               required
             />
@@ -135,15 +135,15 @@ export function RegisterPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+            className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
           >
             {isLoading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="mt-8 text-center text-gray-600">
+        <p className="mt-8 text-center text-gray-400">
           Already have an account?{' '}
-          <Link to="/login" className="text-purple-600 hover:text-purple-800 font-semibold">
+          <Link to="/login" className="text-green-500 hover:text-green-400 font-semibold">
             Log in
           </Link>
         </p>

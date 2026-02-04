@@ -2,20 +2,20 @@ import { Link } from 'react-router-dom';
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="container mx-auto px-4 py-16">
         <nav className="flex justify-between items-center mb-16">
           <h1 className="text-3xl font-bold text-white">CoWrite</h1>
           <div className="space-x-4">
             <Link
               to="/login"
-              className="px-4 py-2 text-white hover:text-purple-200 transition"
+              className="px-4 py-2 text-gray-300 hover:text-green-400 transition"
             >
               Log In
             </Link>
             <Link
               to="/register"
-              className="px-6 py-2 bg-white text-purple-900 rounded-full font-semibold hover:bg-purple-100 transition"
+              className="px-6 py-2 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition"
             >
               Sign Up
             </Link>
@@ -25,25 +25,25 @@ export function LandingPage() {
         <main className="text-center max-w-4xl mx-auto">
           <h2 className="text-5xl md:text-7xl font-bold text-white mb-6">
             Write Stories
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-yellow-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
               Together
             </span>
           </h2>
-          <p className="text-xl text-purple-200 mb-12 max-w-2xl mx-auto">
-            Create collaborative stories with your friends. Take turns adding to the narrative
+          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+            Create collaborative short stories with your friends. Take turns adding to the narrative
             and watch your story unfold in unexpected ways.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               to="/register"
-              className="px-8 py-4 bg-gradient-to-r from-pink-500 to-yellow-500 text-white rounded-full font-bold text-lg hover:opacity-90 transition shadow-lg"
+              className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full font-bold text-lg hover:opacity-90 transition shadow-lg"
             >
               Start Writing
             </Link>
             <Link
               to="/how-it-works"
-              className="px-8 py-4 border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white/10 transition"
+              className="px-8 py-4 border-2 border-gray-600 text-gray-300 rounded-full font-bold text-lg hover:bg-gray-800 transition"
             >
               How It Works
             </Link>
@@ -82,10 +82,10 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-left">
+    <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 text-left border border-gray-700">
       <div className="text-4xl mb-4">{icon}</div>
       <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-purple-200">{description}</p>
+      <p className="text-gray-400">{description}</p>
     </div>
   );
 }

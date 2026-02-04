@@ -43,36 +43,36 @@ export function CreateCirclePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
-          <Link to="/dashboard" className="text-2xl font-bold text-purple-600">
+          <Link to="/dashboard" className="text-2xl font-bold text-green-500">
             CoWrite
           </Link>
         </div>
       </nav>
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
-        <Link to="/dashboard" className="text-purple-600 hover:text-purple-800 mb-6 inline-block">
+        <Link to="/dashboard" className="text-green-500 hover:text-green-400 mb-6 inline-block">
           ← Back to dashboard
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-sm p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create a Circle</h1>
-          <p className="text-gray-600 mb-8">
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Create a Circle</h1>
+          <p className="text-gray-400 mb-8">
             A circle is your private writing group. Invite friends and start creating stories
             together.
           </p>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg mb-6">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                 Circle name *
               </label>
               <input
@@ -80,14 +80,14 @@ export function CreateCirclePage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
                 placeholder="The Storytellers"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
                 Description (optional)
               </label>
               <textarea
@@ -95,13 +95,13 @@ export function CreateCirclePage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition resize-none"
                 placeholder="A group for fantasy short stories..."
               />
             </div>
 
             <div>
-              <label htmlFor="invites" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="invites" className="block text-sm font-medium text-gray-300 mb-2">
                 Invite members (optional)
               </label>
               <textarea
@@ -109,7 +109,7 @@ export function CreateCirclePage() {
                 value={inviteEmails}
                 onChange={(e) => setInviteEmails(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition resize-none"
                 placeholder="Enter email addresses, separated by commas or new lines"
               />
               <p className="text-sm text-gray-500 mt-2">
@@ -120,7 +120,7 @@ export function CreateCirclePage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+              className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
             >
               {isLoading ? 'Creating...' : 'Create Circle'}
             </button>

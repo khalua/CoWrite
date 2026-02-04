@@ -148,14 +148,14 @@ export function StoryPage() {
 
   const wordCount = newContent.trim().split(/\s+/).filter(Boolean).length;
 
-  // Contributor card colors matching the Figma design
+  // Contributor card colors - vibrant for dark mode
   const contributorCardColors = [
-    'bg-[#d7ecff]', // blue
-    'bg-[#d4fde5]', // green
-    'bg-[#fff9bb]', // yellow
-    'bg-[#e6d7ff]', // purple
-    'bg-[#ffd7ec]', // pink
-    'bg-[#ffe4d7]', // orange
+    'bg-blue-600',
+    'bg-emerald-600',
+    'bg-amber-500',
+    'bg-purple-600',
+    'bg-pink-500',
+    'bg-orange-500',
   ];
 
   const getContributorCardColor = (userId: number) => {
@@ -164,12 +164,12 @@ export function StoryPage() {
 
   const getContributorColor = (userId: number) => {
     const colors = [
-      'bg-[#d7ecff] border-blue-300',
-      'bg-[#d4fde5] border-green-300',
-      'bg-[#fff9bb] border-yellow-300',
-      'bg-[#e6d7ff] border-purple-300',
-      'bg-[#ffd7ec] border-pink-300',
-      'bg-[#ffe4d7] border-orange-300',
+      'bg-blue-600/30 border-blue-400',
+      'bg-emerald-600/30 border-emerald-400',
+      'bg-amber-500/30 border-amber-400',
+      'bg-purple-600/30 border-purple-400',
+      'bg-pink-500/30 border-pink-400',
+      'bg-orange-500/30 border-orange-400',
     ];
     return colors[userId % colors.length];
   };
@@ -191,21 +191,21 @@ export function StoryPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-purple-600 border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   if (!story) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-white mb-4">
             {error ? 'Error loading story' : 'Story not found'}
           </h1>
-          {error && <p className="text-red-600 mb-4">{error}</p>}
-          <Link to="/dashboard" className="text-purple-600 hover:text-purple-800">
+          {error && <p className="text-red-400 mb-4">{error}</p>}
+          <Link to="/dashboard" className="text-green-500 hover:text-green-400">
             Back to dashboard
           </Link>
         </div>
@@ -219,15 +219,15 @@ export function StoryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Link to="/dashboard" className="text-2xl font-bold text-purple-600">
+            <Link to="/dashboard" className="text-2xl font-bold text-green-500">
               CoWrite
             </Link>
             {isSuperAdmin && (
-              <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">
+              <span className="px-2 py-1 bg-red-900/50 text-red-400 text-xs font-semibold rounded">
                 SUPER ADMIN
               </span>
             )}
@@ -243,7 +243,7 @@ export function StoryPage() {
                     : 'bg-red-500'
                 }`}
               />
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-400">
                 {connectionStatus === 'connected'
                   ? 'Live'
                   : connectionStatus === 'connecting'
@@ -258,33 +258,33 @@ export function StoryPage() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Link
           to={`/circles/${story.circle_id}`}
-          className="text-purple-600 hover:text-purple-800 mb-6 inline-block"
+          className="text-green-500 hover:text-green-400 mb-6 inline-block"
         >
           ← Back to circle
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-sm p-8 mb-6">
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8 mb-6">
           <div className="flex justify-between items-start mb-4">
-            <h1 className="text-3xl font-bold text-gray-900">{story.title}</h1>
+            <h1 className="text-3xl font-bold text-white">{story.title}</h1>
             <span
               className={`px-3 py-1 rounded-full text-sm font-semibold ${
                 story.status === 'active'
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-600'
+                  ? 'bg-green-900/50 text-green-400'
+                  : 'bg-gray-700 text-gray-400'
               }`}
             >
               {story.status}
             </span>
           </div>
 
-          <div className="flex gap-4 text-sm text-gray-500 mb-6">
+          <div className="flex gap-4 text-sm text-gray-400 mb-6">
             <span>{story.contributions_count} contributions</span>
             <span>{story.word_count} words</span>
           </div>
 
           {/* Contributors */}
           <div className="mb-6">
-            <p className="text-sm font-medium text-gray-900 mb-1.5">Contributors</p>
+            <p className="text-sm font-medium text-gray-300 mb-1.5">Contributors</p>
             <div className="flex flex-wrap gap-5">
               {uniqueContributors.map((contributor) => {
                 const stats = contributorStats.get(contributor.id) || { wordCount: 0, sessionCount: 0 };
@@ -313,15 +313,15 @@ export function StoryPage() {
           </div>
 
           {/* Story content */}
-          <div ref={contentRef} className="prose prose-lg max-w-none">
+          <div ref={contentRef} className="prose prose-lg prose-invert max-w-none">
             {story.contributions.map((contribution, index) => (
               <span
                 key={contribution.id}
                 className={`transition-all duration-500 ${
                   newContributionFlash === contribution.id
-                    ? 'bg-yellow-200 rounded px-1 -mx-1'
+                    ? 'bg-yellow-500/30 rounded px-1 -mx-1'
                     : highlightedUserId === contribution.user_id
-                    ? `${getContributorColor(contribution.user_id)} rounded px-1 -mx-1`
+                    ? `${getContributorColor(contribution.user_id)} rounded px-1 -mx-1 border`
                     : highlightedUserId
                     ? 'opacity-40'
                     : ''
@@ -343,17 +343,17 @@ export function StoryPage() {
 
         {/* Last contribution info */}
         {lastContribution && (
-          <div className={`${getContributorCardColor(lastContribution.user_id)} rounded-lg p-2.5 mb-6`}>
-            <p className="text-sm text-black">
+          <div className={`${getContributorCardColor(lastContribution.user_id)} border border-gray-600 rounded-lg p-2.5 mb-6`}>
+            <p className="text-sm text-gray-200">
               {lastContribution.user.name.split(' ')[0]} wrote the last part ({lastContribution.word_count} words)
               {lastContribution.written_at && (
-                <span className="text-gray-600 ml-2">
+                <span className="text-gray-400 ml-2">
                   at {formatDateTimeForDisplay(lastContribution.written_at)}
                 </span>
               )}
             </p>
             {isSuperAdmin && lastContribution.impersonated && lastContribution.written_by && (
-              <p className="text-red-600 text-sm mt-1">
+              <p className="text-red-400 text-sm mt-1">
                 Actually written by: {lastContribution.written_by.name.split(' ')[0]}
               </p>
             )}
@@ -362,26 +362,26 @@ export function StoryPage() {
 
         {/* Add contribution form */}
         {(story.status === 'active' || isSuperAdmin) && (
-          <div className="bg-white rounded-2xl shadow-sm p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8">
+            <h2 className="text-xl font-bold text-white mb-4">
               {isSuperAdmin ? 'Add to the story (Admin Mode)' : 'Add to the story'}
             </h2>
 
             {/* Super Admin Impersonation Controls */}
             {isSuperAdmin && story.circle_members && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <h3 className="text-sm font-semibold text-red-800 mb-3">Super Admin Controls</h3>
+              <div className="bg-red-900/30 border border-red-700/50 rounded-lg p-4 mb-4">
+                <h3 className="text-sm font-semibold text-red-400 mb-3">Super Admin Controls</h3>
 
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* User selection */}
                   <div>
-                    <label className="block text-sm font-medium text-red-700 mb-1">
+                    <label className="block text-sm font-medium text-red-400 mb-1">
                       Write as user:
                     </label>
                     <select
                       value={selectedUserId ?? ''}
                       onChange={(e) => setSelectedUserId(e.target.value ? Number(e.target.value) : null)}
-                      className="w-full px-3 py-2 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm"
+                      className="w-full px-3 py-2 bg-gray-700 border border-red-700/50 rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm"
                     >
                       <option value="">Myself ({user?.name})</option>
                       {story.circle_members.map((member) => (
@@ -394,7 +394,7 @@ export function StoryPage() {
 
                   {/* Custom datetime */}
                   <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-red-700 mb-1">
+                    <label className="flex items-center gap-2 text-sm font-medium text-red-400 mb-1">
                       <input
                         type="checkbox"
                         checked={useCustomDateTime}
@@ -404,7 +404,7 @@ export function StoryPage() {
                             setCustomDateTime(formatDateTimeLocal(new Date()));
                           }
                         }}
-                        className="rounded border-red-300 text-red-600 focus:ring-red-500"
+                        className="rounded border-red-700/50 bg-gray-700 text-red-500 focus:ring-red-500"
                       />
                       Custom date/time:
                     </label>
@@ -413,9 +413,9 @@ export function StoryPage() {
                       value={customDateTime}
                       onChange={(e) => setCustomDateTime(e.target.value)}
                       disabled={!useCustomDateTime}
-                      className="w-full px-3 py-2 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm disabled:bg-gray-100 disabled:text-gray-400"
+                      className="w-full px-3 py-2 bg-gray-700 border border-red-700/50 rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none text-sm disabled:bg-gray-800 disabled:text-gray-500"
                     />
-                    <p className="text-xs text-red-600 mt-1">
+                    <p className="text-xs text-red-400/70 mt-1">
                       Uses your browser's local timezone ({Intl.DateTimeFormat().resolvedOptions().timeZone})
                     </p>
                   </div>
@@ -428,18 +428,18 @@ export function StoryPage() {
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition resize-none mb-4"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition resize-none mb-4"
                 placeholder="Continue the story..."
               />
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">{wordCount} words</span>
+                <span className="text-sm text-gray-400">{wordCount} words</span>
                 <button
                   type="submit"
                   disabled={isSubmitting || !newContent.trim()}
                   className={`px-6 py-3 font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50 ${
                     isSuperAdmin && selectedUserId
                       ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white'
-                      : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
+                      : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
                   }`}
                 >
                   {isSubmitting
@@ -454,8 +454,8 @@ export function StoryPage() {
         )}
 
         {story.status === 'completed' && !isSuperAdmin && (
-          <div className="bg-gray-100 rounded-xl p-6 text-center">
-            <p className="text-gray-600">This story has been completed and is read-only.</p>
+          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 text-center">
+            <p className="text-gray-400">This story has been completed and is read-only.</p>
           </div>
         )}
       </main>

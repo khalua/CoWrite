@@ -61,26 +61,26 @@ export function AcceptInvitationPage() {
 
   if (isLoading || authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-white border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-8 text-center">
+          <div className="w-16 h-16 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Invitation Error</h1>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <h1 className="text-2xl font-bold text-white mb-2">Invitation Error</h1>
+          <p className="text-gray-400 mb-6">{error}</p>
           <Link
             to="/"
-            className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
+            className="inline-block px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
           >
             Go to Home
           </Link>
@@ -92,47 +92,47 @@ export function AcceptInvitationPage() {
   if (!invitation) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
-        <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-8">
+        <div className="w-16 h-16 bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">
+        <h1 className="text-2xl font-bold text-white text-center mb-2">
           You're Invited!
         </h1>
-        <p className="text-gray-600 text-center mb-6">
-          <span className="font-semibold">{invitation.inviter_name}</span> has invited you to join
+        <p className="text-gray-400 text-center mb-6">
+          <span className="font-semibold text-gray-300">{invitation.inviter_name}</span> has invited you to join
         </p>
 
-        <div className="bg-purple-50 rounded-xl p-4 mb-6 text-center">
-          <p className="text-xl font-bold text-purple-900">{invitation.circle_name}</p>
+        <div className="bg-green-900/30 border border-green-700/50 rounded-xl p-4 mb-6 text-center">
+          <p className="text-xl font-bold text-green-400">{invitation.circle_name}</p>
         </div>
 
         {isAuthenticated ? (
           <button
             onClick={handleAccept}
             disabled={isAccepting}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+            className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
           >
             {isAccepting ? 'Joining...' : 'Accept Invitation'}
           </button>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm text-gray-600 text-center">
+            <p className="text-sm text-gray-400 text-center">
               Create an account or log in to join this circle.
             </p>
             <Link
               to={`/register?invitation=${token}`}
-              className="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition text-center"
+              className="block w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition text-center"
             >
               Create Account
             </Link>
             <Link
               to={`/login?invitation=${token}`}
-              className="block w-full py-3 border-2 border-purple-600 text-purple-600 font-semibold rounded-lg hover:bg-purple-50 transition text-center"
+              className="block w-full py-3 border-2 border-green-500 text-green-500 font-semibold rounded-lg hover:bg-green-500/10 transition text-center"
             >
               Log In
             </Link>

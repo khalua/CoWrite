@@ -24,7 +24,12 @@
       "Bash(npm run build:*)",
       "mcp__claude_ai_Figma__get_screenshot",
       "mcp__claude_ai_Figma__get_design_context",
-      "Bash(bin/rails solid_queue:install:*)"
+      "Bash(bin/rails solid_queue:install:*)",
+      "Bash(bin/rails db:seed)",
+      "Bash(bin/rails runner:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(pkill:*)"
     ]
   }
 }

@@ -48,14 +48,14 @@ export function TutorialPage() {
   const step = tutorialSteps[currentStep];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-lg p-8 text-center">
         <div className="flex justify-center gap-2 mb-8">
           {tutorialSteps.map((_, index) => (
             <div
               key={index}
               className={`h-2 w-8 rounded-full transition-colors ${
-                index <= currentStep ? 'bg-purple-600' : 'bg-gray-200'
+                index <= currentStep ? 'bg-green-500' : 'bg-gray-600'
               }`}
             />
           ))}
@@ -63,19 +63,19 @@ export function TutorialPage() {
 
         <div className="text-6xl mb-6">{step.icon}</div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">{step.title}</h1>
-        <p className="text-gray-600 mb-8 text-lg">{step.description}</p>
+        <h1 className="text-2xl font-bold text-white mb-4">{step.title}</h1>
+        <p className="text-gray-400 mb-8 text-lg">{step.description}</p>
 
         <div className="flex gap-4">
           <button
             onClick={handleSkip}
-            className="flex-1 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition"
+            className="flex-1 py-3 border border-gray-600 text-gray-300 font-semibold rounded-lg hover:bg-gray-700 transition"
           >
             Skip Tutorial
           </button>
           <button
             onClick={handleNext}
-            className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
+            className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
           >
             {currentStep < tutorialSteps.length - 1 ? 'Next' : 'Create Your First Circle'}
           </button>

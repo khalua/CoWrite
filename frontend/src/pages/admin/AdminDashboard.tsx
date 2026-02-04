@@ -45,54 +45,54 @@ export function AdminDashboard() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-purple-600 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold text-white mb-8">Admin Dashboard</h1>
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-4 gap-6 mb-8">
         <Link
           to="/admin/users"
-          className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition"
+          className="bg-gray-800 rounded-xl border border-gray-700 p-6 hover:border-gray-600 transition"
         >
-          <p className="text-sm text-gray-500 mb-1">Total Users</p>
-          <p className="text-3xl font-bold text-gray-900">{stats.users}</p>
+          <p className="text-sm text-gray-400 mb-1">Total Users</p>
+          <p className="text-3xl font-bold text-white">{stats.users}</p>
         </Link>
 
         <Link
           to="/admin/circles"
-          className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition"
+          className="bg-gray-800 rounded-xl border border-gray-700 p-6 hover:border-gray-600 transition"
         >
-          <p className="text-sm text-gray-500 mb-1">Total Circles</p>
-          <p className="text-3xl font-bold text-gray-900">{stats.circles}</p>
+          <p className="text-sm text-gray-400 mb-1">Total Circles</p>
+          <p className="text-3xl font-bold text-white">{stats.circles}</p>
         </Link>
 
         <Link
           to="/admin/stories"
-          className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition"
+          className="bg-gray-800 rounded-xl border border-gray-700 p-6 hover:border-gray-600 transition"
         >
-          <p className="text-sm text-gray-500 mb-1">Total Stories</p>
-          <p className="text-3xl font-bold text-gray-900">{stats.stories}</p>
+          <p className="text-sm text-gray-400 mb-1">Total Stories</p>
+          <p className="text-3xl font-bold text-white">{stats.stories}</p>
         </Link>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <p className="text-sm text-gray-500 mb-1">Active Stories</p>
-          <p className="text-3xl font-bold text-green-600">{stats.activeStories}</p>
+        <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
+          <p className="text-sm text-gray-400 mb-1">Active Stories</p>
+          <p className="text-3xl font-bold text-green-400">{stats.activeStories}</p>
         </div>
       </div>
 
       {/* Recent Activity */}
       <div className="grid md:grid-cols-2 gap-8">
         {/* Recent Users */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Recent Users</h2>
-            <Link to="/admin/users" className="text-sm text-purple-600 hover:underline">
+            <h2 className="text-lg font-bold text-white">Recent Users</h2>
+            <Link to="/admin/users" className="text-sm text-green-500 hover:text-green-400">
               View all
             </Link>
           </div>
@@ -101,15 +101,15 @@ export function AdminDashboard() {
               <Link
                 key={user.id}
                 to={`/admin/users/${user.id}`}
-                className="block p-3 rounded-lg hover:bg-gray-50 transition"
+                className="block p-3 rounded-lg hover:bg-gray-700 transition"
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium text-gray-900">{user.name}</p>
-                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <p className="font-medium text-white">{user.name}</p>
+                    <p className="text-sm text-gray-400">{user.email}</p>
                   </div>
                   {user.is_super_admin && (
-                    <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">
+                    <span className="px-2 py-1 bg-red-900/50 text-red-400 text-xs rounded">
                       Admin
                     </span>
                   )}
@@ -120,10 +120,10 @@ export function AdminDashboard() {
         </div>
 
         {/* Recent Stories */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Recent Stories</h2>
-            <Link to="/admin/stories" className="text-sm text-purple-600 hover:underline">
+            <h2 className="text-lg font-bold text-white">Recent Stories</h2>
+            <Link to="/admin/stories" className="text-sm text-green-500 hover:text-green-400">
               View all
             </Link>
           </div>
@@ -132,18 +132,18 @@ export function AdminDashboard() {
               <Link
                 key={story.id}
                 to={`/admin/stories/${story.id}`}
-                className="block p-3 rounded-lg hover:bg-gray-50 transition"
+                className="block p-3 rounded-lg hover:bg-gray-700 transition"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium text-gray-900">{story.title}</p>
-                    <p className="text-sm text-gray-500">in {story.circle.name}</p>
+                    <p className="font-medium text-white">{story.title}</p>
+                    <p className="text-sm text-gray-400">in {story.circle.name}</p>
                   </div>
                   <span
                     className={`px-2 py-1 text-xs rounded ${
                       story.status === 'active'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-green-900/50 text-green-400'
+                        : 'bg-gray-700 text-gray-400'
                     }`}
                   >
                     {story.status}

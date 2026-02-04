@@ -4,9 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react(), tailwindcss()],
-  base: '/frontend/',
+  // Use /frontend/ base only for production build (served by Rails)
+  // In dev mode, use root path for easier navigation
+  base: command === 'build' ? '/frontend/' : '/',
   build: {
     outDir: path.resolve(__dirname, '../public/frontend'),
     emptyOutDir: true,
@@ -24,4 +26,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
