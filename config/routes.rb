@@ -43,6 +43,9 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Serve React frontend for all other routes (SPA catch-all)
-  get "*path", to: "frontend#index", constraints: ->(req) { !req.path.start_with?("/api", "/cable", "/rails") }
+  # Exclude API, cable, rails, and static asset paths
+  get "*path", to: "frontend#index", constraints: ->(req) {
+    !req.path.start_with?("/api", "/cable", "/rails", "/assets", "/frontend")
+  }
   root "frontend#index"
 end

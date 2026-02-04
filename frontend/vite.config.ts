@@ -6,6 +6,7 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  base: '/frontend/',
   build: {
     outDir: path.resolve(__dirname, '../public/frontend'),
     emptyOutDir: true,
