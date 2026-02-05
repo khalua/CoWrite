@@ -29,7 +29,8 @@
       "Bash(bin/rails runner:*)",
       "Bash(curl:*)",
       "Bash(lsof:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(npm run typecheck:*)"
     ]
   }
 }
