@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete "auth/logout", to: "auth#logout"
     get "auth/me", to: "auth#me"
 
+    # Password reset
+    post "auth/forgot-password", to: "password_resets#create"
+    get "auth/reset-password/:token", to: "password_resets#show"
+    post "auth/reset-password/:token", to: "password_resets#update"
+
     # Circles
     resources :circles do
       resources :invitations, only: [:create]
@@ -23,8 +28,8 @@ Rails.application.routes.draw do
       resources :contributions, only: [:create]
     end
 
-    # Standalone contributions route for editing
-    resources :contributions, only: [:update]
+    # Standalone contributions route for editing and deleting
+    resources :contributions, only: [:update, :destroy]
 
     # Admin routes (super admin only)
     namespace :admin do

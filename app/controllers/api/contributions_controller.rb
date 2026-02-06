@@ -1,9 +1,9 @@
 class Api::ContributionsController < Api::BaseController
-  before_action :set_story, except: [:update]
-  before_action :set_contribution, only: [:update]
-  before_action :authorize_access!, except: [:update]
-  before_action :authorize_edit!, only: [:update]
-  before_action :check_story_active!, only: [:create], unless: :super_admin?
+  before_action :set_story, except: [:update, :destroy]
+  before_action :set_contribution, only: [:update, :destroy]
+  before_action :authorize_access!, except: [:update, :destroy]
+  before_action :authorize_edit!, only: [:update, :destroy]
+  before_action :check_story_active!, only: [:create, :destroy], unless: :super_admin?
 
   def create
     contribution = @story.contributions.build(contribution_params)
@@ -38,6 +38,13 @@ class Api::ContributionsController < Api::BaseController
     else
       render json: { error: @contribution.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    story_id = @contribution.story_id
+    @contribution.destroy!
+    broadcast_contribution_deleted(story_id, @contribution.id)
+    head :no_content
   end
 
   private
@@ -126,6 +133,16 @@ class Api::ContributionsController < Api::BaseController
       {
         type: "contribution_updated",
         contribution: contribution_json(contribution)
+      }
+    )
+  end
+
+  def broadcast_contribution_deleted(story_id, contribution_id)
+    ActionCable.server.broadcast(
+      "story_#{story_id}",
+      {
+        type: "contribution_deleted",
+        contribution_id: contribution_id
       }
     )
   end

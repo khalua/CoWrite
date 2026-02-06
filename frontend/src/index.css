@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* Green accent colors for dark mode */
-  --color-accent-50: #f0fdf4;
-  --color-accent-100: #dcfce7;
-  --color-accent-200: #bbf7d0;
-  --color-accent-300: #86efac;
-  --color-accent-400: #4ade80;
-  --color-accent-500: #22c55e;
-  --color-accent-600: #16a34a;
-  --color-accent-700: #15803d;
-  --color-accent-800: #166534;
-  --color-accent-900: #14532d;
+  /* Vibrant yellow accent colors for dark mode */
+  --color-accent-50: #fefce8;
+  --color-accent-100: #fef9c3;
+  --color-accent-200: #fef08a;
+  --color-accent-300: #fde047;
+  --color-accent-400: #ffde00;
+  --color-accent-500: #eab308;
+  --color-accent-600: #ca8a04;
+  --color-accent-700: #a16207;
+  --color-accent-800: #854d0e;
+  --color-accent-900: #713f12;
 }
 
 /* Dark mode by default */

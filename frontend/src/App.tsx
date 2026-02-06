@@ -21,6 +21,8 @@ import {
   AdminStoryDetailPage,
 } from './pages/admin';
 import { AcceptInvitationPage } from './pages/AcceptInvitationPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 
 const queryClient = new QueryClient();
 
@@ -76,6 +78,22 @@ function AppRoutes() {
         element={
           <PublicRoute>
             <RegisterPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <PublicRoute>
+            <ForgotPasswordPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/reset-password/:token"
+        element={
+          <PublicRoute>
+            <ResetPasswordPage />
           </PublicRoute>
         }
       />

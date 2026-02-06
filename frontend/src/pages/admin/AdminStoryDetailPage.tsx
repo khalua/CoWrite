@@ -132,7 +132,7 @@ export function AdminStoryDetailPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-400 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -141,7 +141,7 @@ export function AdminStoryDetailPage() {
     return (
       <div className="text-center py-12">
         <p className="text-red-400 mb-4">{error || 'Story not found'}</p>
-        <Link to="/admin/stories" className="text-yellow-500 hover:text-yellow-400">
+        <Link to="/admin/stories" className="text-yellow-300 hover:text-yellow-300">
           Back to Stories
         </Link>
       </div>
@@ -152,7 +152,7 @@ export function AdminStoryDetailPage() {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <Link to="/admin/stories" className="text-yellow-500 hover:text-yellow-400 text-sm">
+        <Link to="/admin/stories" className="text-yellow-300 hover:text-yellow-300 text-sm">
           &larr; Back to Stories
         </Link>
       </div>
@@ -169,7 +169,7 @@ export function AdminStoryDetailPage() {
           <span
             className={`px-3 py-1 text-sm font-semibold rounded ${
               story.status === 'active'
-                ? 'bg-yellow-900/50 text-yellow-400'
+                ? 'bg-yellow-800/50 text-yellow-300'
                 : 'bg-gray-700 text-gray-400'
             }`}
           >
@@ -182,7 +182,7 @@ export function AdminStoryDetailPage() {
             <p className="text-gray-500">Circle</p>
             <Link
               to={`/admin/circles/${story.circle.id}`}
-              className="font-medium text-yellow-500 hover:text-yellow-400"
+              className="font-medium text-yellow-300 hover:text-yellow-300"
             >
               {story.circle.name}
             </Link>
@@ -215,7 +215,7 @@ export function AdminStoryDetailPage() {
               <select
                 value={selectedUserId}
                 onChange={(e) => setSelectedUserId(e.target.value ? parseInt(e.target.value) : '')}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none"
                 required
               >
                 <option value="">Select a user...</option>
@@ -235,7 +235,7 @@ export function AdminStoryDetailPage() {
                 type="datetime-local"
                 value={writtenAt}
                 onChange={(e) => setWrittenAt(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Leave empty to use current time
@@ -251,7 +251,7 @@ export function AdminStoryDetailPage() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={4}
-              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none resize-none"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none resize-none"
               placeholder="Write the contribution content..."
               required
             />
@@ -266,7 +266,7 @@ export function AdminStoryDetailPage() {
           <button
             type="submit"
             disabled={isSubmitting || !selectedUserId || !content.trim()}
-            className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+            className="px-6 py-3 bg-gradient-to-r from-yellow-300 to-amber-300 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
           >
             {isSubmitting ? 'Creating...' : 'Create Contribution'}
           </button>
@@ -284,12 +284,12 @@ export function AdminStoryDetailPage() {
             <div
               key={contribution.id}
               className={`p-4 rounded-lg ${
-                contribution.impersonation ? 'bg-yellow-900/30 border border-yellow-700/50' : 'bg-gray-700/50'
+                contribution.impersonation ? 'bg-yellow-800/30 border border-yellow-600/50' : 'bg-gray-700/50'
               }`}
             >
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 flex items-center justify-center text-white text-sm font-medium">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-300 to-amber-300 flex items-center justify-center text-white text-sm font-medium">
                     {contribution.user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -297,7 +297,7 @@ export function AdminStoryDetailPage() {
                       {contribution.user.name}
                     </span>
                     {contribution.impersonation && (
-                      <span className="ml-2 text-xs text-yellow-400 bg-yellow-900/50 px-2 py-0.5 rounded">
+                      <span className="ml-2 text-xs text-yellow-300 bg-yellow-800/50 px-2 py-0.5 rounded">
                         Written by {contribution.impersonation.written_by.name}
                       </span>
                     )}
@@ -360,7 +360,7 @@ export function AdminStoryDetailPage() {
                       ...editingContribution,
                       user_id: parseInt(e.target.value)
                     })}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none"
                     required
                   >
                     {story.circle.members.map((member) => (
@@ -382,7 +382,7 @@ export function AdminStoryDetailPage() {
                       ...editingContribution,
                       written_at: e.target.value
                     })}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Leave empty to keep current timestamp
@@ -401,7 +401,7 @@ export function AdminStoryDetailPage() {
                     content: e.target.value
                   })}
                   rows={6}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none resize-none"
                   required
                 />
               </div>
@@ -424,7 +424,7 @@ export function AdminStoryDetailPage() {
                 <button
                   type="submit"
                   disabled={isEditSubmitting}
-                  className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50"
                 >
                   {isEditSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>

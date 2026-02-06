@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_04_032048) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_05_030122) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -82,7 +82,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_032048) do
     t.boolean "is_super_admin", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_reset_token"
+    t.datetime "password_reset_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
   end
 
   add_foreign_key "circle_members", "circles"

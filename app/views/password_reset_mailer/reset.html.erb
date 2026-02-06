@@ -1,0 +1,24 @@
+<h1>Reset your password</h1>
+
+<p>
+  Hi <%= @user.name %>,
+</p>
+
+<p>
+  We received a request to reset your password for your CoWrite account. Click the button below to choose a new password:
+</p>
+
+<a href="<%= @reset_url %>" class="button">Reset Password</a>
+
+<p style="font-size: 14px; color: #6b7280;">
+  Or copy and paste this link into your browser:<br>
+  <a href="<%= @reset_url %>" style="color: #d97706;"><%= @reset_url %></a>
+</p>
+
+<p style="font-size: 14px; color: #6b7280;">
+  This link will expire in 2 hours.
+</p>
+
+<p style="font-size: 14px; color: #6b7280;">
+  If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+</p>

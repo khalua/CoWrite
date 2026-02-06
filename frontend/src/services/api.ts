@@ -54,6 +54,15 @@ export const authApi = {
   logout: () => api.delete('/auth/logout'),
 
   getCurrentUser: () => api.get<User>('/auth/me'),
+
+  forgotPassword: (email: string) =>
+    api.post<{ message: string }>('/auth/forgot-password', { email }),
+
+  validateResetToken: (token: string) =>
+    api.get<{ valid: boolean; email?: string }>(`/auth/reset-password/${token}`),
+
+  resetPassword: (token: string, password: string) =>
+    api.post<{ message: string }>(`/auth/reset-password/${token}`, { password }),
 };
 
 // Circle endpoints
@@ -111,6 +120,8 @@ export const contributionApi = {
 
   update: (id: number, content: string) =>
     api.patch<Contribution>(`/contributions/${id}`, { contribution: { content } }),
+
+  delete: (id: number) => api.delete(`/contributions/${id}`),
 
   // Super admin impersonation
   createAsUser: (

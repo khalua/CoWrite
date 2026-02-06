@@ -23,6 +23,35 @@ class User < ApplicationRecord
     circle_members.find_by(circle: circle)&.role == "admin"
   end
 
+  def generate_password_reset_token!
+    update!(
+      password_reset_token: SecureRandom.urlsafe_base64(32),
+      password_reset_sent_at: Time.current
+    )
+  end
+
+  def clear_password_reset_token!
+    update!(
+      password_reset_token: nil,
+      password_reset_sent_at: nil
+    )
+  end
+
+  def self.find_by_password_reset_token(token)
+    return nil if token.blank?
+
+    user = find_by(password_reset_token: token)
+    return nil if user.nil?
+
+    # Token expires after 2 hours
+    if user.password_reset_sent_at < 2.hours.ago
+      user.clear_password_reset_token!
+      return nil
+    end
+
+    user
+  end
+
   private
 
   def downcase_email

@@ -42,6 +42,12 @@ export function StoryPage() {
   const [editingContribution, setEditingContribution] = useState<{ id: number; content: string } | null>(null);
   const [isEditSubmitting, setIsEditSubmitting] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // New paragraph state
+  const [startNewParagraph, setStartNewParagraph] = useState(false);
+  const [editStartNewParagraph, setEditStartNewParagraph] = useState(false);
 
   const isSuperAdmin = user?.is_super_admin ?? false;
 
@@ -147,16 +153,17 @@ export function StoryPage() {
     setIsSubmitting(true);
     try {
       let res;
+      const contentToSubmit = startNewParagraph ? `\n\n${newContent}` : newContent;
 
       if (isSuperAdmin && selectedUserId) {
         // Super admin impersonation
         const writtenAt = useCustomDateTime && customDateTime
           ? new Date(customDateTime).toISOString()
           : undefined;
-        res = await contributionApi.createAsUser(story.id, newContent, selectedUserId, writtenAt);
+        res = await contributionApi.createAsUser(story.id, contentToSubmit, selectedUserId, writtenAt);
       } else {
         // Normal submission
-        res = await contributionApi.create(story.id, newContent);
+        res = await contributionApi.create(story.id, contentToSubmit);
       }
 
       // The contribution will come through WebSocket, but we also update locally
@@ -168,6 +175,7 @@ export function StoryPage() {
         contributions_count: story.contributions_count + 1,
       });
       setNewContent('');
+      setStartNewParagraph(false);
     } catch (err) {
       console.error('Failed to add contribution:', err);
     } finally {
@@ -185,7 +193,10 @@ export function StoryPage() {
     setEditError(null);
 
     try {
-      const res = await contributionApi.update(editingContribution.id, editingContribution.content);
+      const contentToSubmit = editStartNewParagraph
+        ? `\n\n${editingContribution.content}`
+        : editingContribution.content;
+      const res = await contributionApi.update(editingContribution.id, contentToSubmit);
 
       // Update local state
       setStory((prevStory) => {
@@ -199,6 +210,7 @@ export function StoryPage() {
       });
 
       setEditingContribution(null);
+      setEditStartNewParagraph(false);
     } catch (err: any) {
       setEditError(err.response?.data?.error || 'Failed to update contribution');
     } finally {
@@ -206,11 +218,43 @@ export function StoryPage() {
     }
   };
 
+  const handleDeleteContribution = async () => {
+    if (!editingContribution) return;
+
+    setIsDeleting(true);
+    setEditError(null);
+
+    try {
+      await contributionApi.delete(editingContribution.id);
+
+      // Update local state
+      setStory((prevStory) => {
+        if (!prevStory) return null;
+        const deletedContribution = prevStory.contributions.find((c) => c.id === editingContribution.id);
+        const deletedWordCount = deletedContribution?.word_count || 0;
+        return {
+          ...prevStory,
+          contributions: prevStory.contributions.filter((c) => c.id !== editingContribution.id),
+          contributions_count: prevStory.contributions_count - 1,
+          word_count: prevStory.word_count - deletedWordCount,
+        };
+      });
+
+      setEditingContribution(null);
+      setEditStartNewParagraph(false);
+      setShowDeleteConfirm(false);
+    } catch (err: any) {
+      setEditError(err.response?.data?.error || 'Failed to delete contribution');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   // Contributor card colors - vibrant for dark mode
   const contributorCardColors = [
     'bg-blue-600',
     'bg-emerald-600',
-    'bg-amber-500',
+    'bg-amber-400',
     'bg-purple-600',
     'bg-pink-500',
     'bg-orange-500',
@@ -224,7 +268,7 @@ export function StoryPage() {
     const colors = [
       'bg-blue-600/30 border-blue-400',
       'bg-emerald-600/30 border-emerald-400',
-      'bg-amber-500/30 border-amber-400',
+      'bg-amber-400/30 border-amber-300',
       'bg-purple-600/30 border-purple-400',
       'bg-pink-500/30 border-pink-400',
       'bg-orange-500/30 border-orange-400',
@@ -250,7 +294,7 @@ export function StoryPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-400 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -263,7 +307,7 @@ export function StoryPage() {
             {error ? 'Error loading story' : 'Story not found'}
           </h1>
           {error && <p className="text-red-400 mb-4">{error}</p>}
-          <Link to="/dashboard" className="text-yellow-500 hover:text-yellow-400">
+          <Link to="/dashboard" className="text-yellow-300 hover:text-yellow-300">
             Back to dashboard
           </Link>
         </div>
@@ -281,7 +325,7 @@ export function StoryPage() {
       <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Link to="/dashboard" className="text-2xl font-bold text-yellow-500">
+            <Link to="/dashboard" className="text-2xl font-bold text-yellow-300">
               CoWrite
             </Link>
             {isSuperAdmin && (
@@ -297,7 +341,7 @@ export function StoryPage() {
                   connectionStatus === 'connected'
                     ? 'bg-green-500'
                     : connectionStatus === 'connecting'
-                    ? 'bg-yellow-500 animate-pulse'
+                    ? 'bg-yellow-400 animate-pulse'
                     : 'bg-red-500'
                 }`}
               />
@@ -316,7 +360,7 @@ export function StoryPage() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Link
           to={`/circles/${story.circle_id}`}
-          className="text-yellow-500 hover:text-yellow-400 mb-6 inline-block"
+          className="text-yellow-300 hover:text-yellow-300 mb-6 inline-block"
         >
           ← Back to circle
         </Link>
@@ -327,7 +371,7 @@ export function StoryPage() {
             <span
               className={`px-3 py-1 rounded-full text-sm font-semibold ${
                 story.status === 'active'
-                  ? 'bg-yellow-900/50 text-yellow-400'
+                  ? 'bg-green-800/50 text-green-300'
                   : 'bg-gray-700 text-gray-400'
               }`}
             >
@@ -370,42 +414,65 @@ export function StoryPage() {
             )}
           </div>
 
+          {/* Separator */}
+          <hr className="border-gray-600 mb-6" />
+
           {/* Story content */}
           <div ref={contentRef} className="prose prose-lg prose-invert max-w-none">
-            {story.contributions.map((contribution, index) => (
-              <span
-                key={contribution.id}
-                className={`transition-all duration-500 group relative ${
-                  newContributionFlash === contribution.id
-                    ? 'bg-yellow-500/30 rounded px-1 -mx-1'
-                    : highlightedUserId === contribution.user_id
-                    ? `${getContributorColor(contribution.user_id)} rounded px-1 -mx-1 border`
-                    : highlightedUserId
-                    ? 'opacity-40'
-                    : ''
-                }`}
-                title={
-                  isSuperAdmin && contribution.impersonated
-                    ? `Written by ${contribution.written_by?.name} (impersonating ${contribution.user.name})`
-                    : contribution.written_at
-                    ? `Written at: ${formatDateTimeForDisplay(contribution.written_at)}`
-                    : undefined
-                }
-              >
-                {contribution.content}
-                {/* Edit button for user's own contributions */}
-                {contribution.user_id === user?.id && story.status === 'active' && (
-                  <button
-                    onClick={() => setEditingContribution({ id: contribution.id, content: contribution.content })}
-                    className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center justify-center w-5 h-5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                    title="Edit your contribution"
+            {story.contributions.map((contribution, index) => {
+              const startsWithParagraph = contribution.content.startsWith('\n\n');
+              const displayContent = startsWithParagraph
+                ? contribution.content.slice(2)
+                : contribution.content;
+              // Don't add trailing space if next contribution starts a new paragraph
+              const nextContribution = story.contributions[index + 1];
+              const nextStartsWithParagraph = nextContribution?.content.startsWith('\n\n');
+              const shouldAddSpace = index < story.contributions.length - 1 && !nextStartsWithParagraph;
+
+              return (
+                <span key={contribution.id}>
+                  {startsWithParagraph && <span className="block mt-4" />}
+                  <span
+                    className={`transition-all duration-500 group relative ${
+                      newContributionFlash === contribution.id
+                        ? 'bg-yellow-400/30 rounded px-1 -mx-1'
+                        : highlightedUserId === contribution.user_id
+                        ? `${getContributorColor(contribution.user_id)} rounded px-1 -mx-1 border`
+                        : highlightedUserId
+                        ? 'opacity-40'
+                        : ''
+                    }`}
+                    title={
+                      isSuperAdmin && contribution.impersonated
+                        ? `Written by ${contribution.written_by?.name} (impersonating ${contribution.user.name})`
+                        : contribution.written_at
+                        ? `Written at: ${formatDateTimeForDisplay(contribution.written_at)}`
+                        : undefined
+                    }
                   >
-                    ✎
-                  </button>
-                )}
-                {index < story.contributions.length - 1 ? ' ' : ''}
-              </span>
-            ))}
+                    {displayContent}
+                    {/* Edit button for user's own contributions - positioned above */}
+                    {contribution.user_id === user?.id && story.status === 'active' && (
+                      <button
+                        onClick={() => {
+                          const hasParagraphBreak = contribution.content.startsWith('\n\n');
+                          setEditingContribution({
+                            id: contribution.id,
+                            content: hasParagraphBreak ? contribution.content.slice(2) : contribution.content,
+                          });
+                          setEditStartNewParagraph(hasParagraphBreak);
+                        }}
+                        className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1.5 text-sm bg-gray-700 text-gray-200 rounded-lg shadow-lg hover:bg-gray-600 whitespace-nowrap"
+                        title="Edit your contribution"
+                      >
+                        Edit your contribution
+                      </button>
+                    )}
+                  </span>
+                  {shouldAddSpace ? ' ' : ''}
+                </span>
+              );
+            })}
           </div>
         </div>
 
@@ -492,11 +559,20 @@ export function StoryPage() {
             )}
 
             <form onSubmit={handleSubmit}>
+              <label className="flex items-center gap-2 text-sm text-gray-300 mb-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={startNewParagraph}
+                  onChange={(e) => setStartNewParagraph(e.target.checked)}
+                  className="rounded border-gray-600 bg-gray-700 text-yellow-500 focus:ring-yellow-500"
+                />
+                Start a new paragraph
+              </label>
               <textarea
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 rows={6}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition resize-none mb-4"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition resize-none mb-4"
                 placeholder="Continue the story..."
               />
               <div className="flex justify-between items-center">
@@ -506,8 +582,8 @@ export function StoryPage() {
                   disabled={isSubmitting || !newContent.trim()}
                   className={`px-6 py-3 font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50 ${
                     isSuperAdmin && selectedUserId
-                      ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white'
-                      : 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white'
+                      ? 'bg-gradient-to-r from-red-600 to-orange-600 text-black'
+                      : 'bg-gradient-to-r from-yellow-400 to-amber-400 text-black'
                   }`}
                 >
                   {isSubmitting
@@ -534,11 +610,20 @@ export function StoryPage() {
               <h3 className="text-xl font-bold text-white mb-4">Edit Your Contribution</h3>
 
               <form onSubmit={handleEditContribution}>
+                <label className="flex items-center gap-2 text-sm text-gray-300 mb-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editStartNewParagraph}
+                    onChange={(e) => setEditStartNewParagraph(e.target.checked)}
+                    className="rounded border-gray-600 bg-gray-700 text-yellow-500 focus:ring-yellow-500"
+                  />
+                  Start a new paragraph
+                </label>
                 <textarea
                   value={editingContribution.content}
                   onChange={(e) => setEditingContribution({ ...editingContribution, content: e.target.value })}
                   rows={6}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none resize-none mb-4"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none resize-none mb-4"
                   required
                 />
 
@@ -548,26 +633,64 @@ export function StoryPage() {
                   </div>
                 )}
 
-                <div className="flex justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditingContribution(null);
-                      setEditError(null);
-                    }}
-                    disabled={isEditSubmitting}
-                    className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isEditSubmitting || !editingContribution.content.trim()}
-                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50"
-                  >
-                    {isEditSubmitting ? 'Saving...' : 'Save Changes'}
-                  </button>
-                </div>
+                {showDeleteConfirm ? (
+                  <div className="p-4 bg-red-900/30 border border-red-700 rounded-lg mb-4">
+                    <p className="text-red-300 text-sm mb-3">
+                      Are you sure you want to delete this contribution? This cannot be undone.
+                    </p>
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowDeleteConfirm(false)}
+                        disabled={isDeleting}
+                        className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleDeleteContribution}
+                        disabled={isDeleting}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                      >
+                        {isDeleting ? 'Deleting...' : 'Yes, Delete'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <button
+                      type="button"
+                      onClick={() => setShowDeleteConfirm(true)}
+                      disabled={isEditSubmitting}
+                      className="px-4 py-2 text-red-400 hover:text-red-300 disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingContribution(null);
+                          setEditError(null);
+                          setEditStartNewParagraph(false);
+                          setShowDeleteConfirm(false);
+                        }}
+                        disabled={isEditSubmitting}
+                        className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isEditSubmitting || !editingContribution.content.trim()}
+                        className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50"
+                      >
+                        {isEditSubmitting ? 'Saving...' : 'Save Changes'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </form>
             </div>
           </div>

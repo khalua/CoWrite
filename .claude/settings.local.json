@@ -30,7 +30,11 @@
       "Bash(curl:*)",
       "Bash(lsof:*)",
       "Bash(pkill:*)",
-      "Bash(npm run typecheck:*)"
+      "Bash(npm run typecheck:*)",
+      "Bash(grep:*)",
+      "Bash(bin/rails generate:*)",
+      "Bash(bin/rails db:migrate:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
