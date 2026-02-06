@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { circleApi } from './services/api';
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -19,6 +21,7 @@ import {
   AdminCircleDetailPage,
   AdminStoriesPage,
   AdminStoryDetailPage,
+  AdminInvitationsPage,
 } from './pages/admin';
 import { AcceptInvitationPage } from './pages/AcceptInvitationPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
@@ -42,8 +45,27 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
+  const [isCheckingCircles, setIsCheckingCircles] = useState(false);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (isAuthenticated && !isLoading && !isCheckingCircles && !redirectPath) {
+      setIsCheckingCircles(true);
+      circleApi.list()
+        .then((res) => {
+          if (res.data.length === 1) {
+            setRedirectPath(`/circles/${res.data[0].id}`);
+          } else {
+            setRedirectPath('/dashboard');
+          }
+        })
+        .catch(() => {
+          setRedirectPath('/dashboard');
+        });
+    }
+  }, [isAuthenticated, isLoading, isCheckingCircles, redirectPath]);
+
+  if (isLoading || (isAuthenticated && !redirectPath)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin h-8 w-8 border-4 border-purple-600 border-t-transparent rounded-full" />
@@ -51,7 +73,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return isAuthenticated ? <Navigate to="/dashboard" /> : <>{children}</>;
+  return isAuthenticated && redirectPath ? <Navigate to={redirectPath} /> : <>{children}</>;
 }
 
 function AppRoutes() {
@@ -165,6 +187,7 @@ function AppRoutes() {
         <Route path="circles/:id" element={<AdminCircleDetailPage />} />
         <Route path="stories" element={<AdminStoriesPage />} />
         <Route path="stories/:id" element={<AdminStoryDetailPage />} />
+        <Route path="invitations" element={<AdminInvitationsPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" />} />

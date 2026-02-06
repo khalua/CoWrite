@@ -21,6 +21,7 @@ export function AdminLayout() {
     { path: '/admin/users', label: 'Users' },
     { path: '/admin/circles', label: 'Circles' },
     { path: '/admin/stories', label: 'Stories' },
+    { path: '/admin/invitations', label: 'Invitations' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -33,7 +34,7 @@ export function AdminLayout() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
               <Link to="/admin" className="flex items-center gap-2">
-                <span className="text-xl font-bold text-yellow-300">
+                <span className="text-xl font-display italic text-yellow-400">
                   CoWrite
                 </span>
                 <span className="px-2 py-1 bg-red-900/50 text-red-400 text-xs font-semibold rounded">

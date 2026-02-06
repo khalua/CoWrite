@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
     # Stories
     resources :stories, only: [:show] do
-      patch "complete", on: :member
+      patch "status", to: "stories#update_status", on: :member
       resources :contributions, only: [:create]
     end
 
@@ -36,6 +36,9 @@ Rails.application.routes.draw do
       resources :circles, only: [:index, :show, :destroy]
       resources :stories, only: [:index, :show]
       resources :users, only: [:index, :show, :destroy] do
+        post "impersonate", on: :member
+      end
+      resources :invitations, only: [:index, :show] do
         post "impersonate", on: :member
       end
       resources :contributions, only: [:update, :destroy]

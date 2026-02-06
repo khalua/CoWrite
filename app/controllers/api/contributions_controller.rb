@@ -79,8 +79,8 @@ class Api::ContributionsController < Api::BaseController
   end
 
   def check_story_active!
-    return if @story.status == "active"
-    render json: { error: "This story is no longer accepting contributions" }, status: :unprocessable_entity
+    return if @story.accepting_contributions?
+    render json: { error: "This story is not accepting contributions" }, status: :unprocessable_entity
   end
 
   def contribution_params

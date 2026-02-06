@@ -10,6 +10,7 @@ import type {
   AdminCircle,
   AdminStory,
   AdminStoryDetail,
+  AdminInvitation,
 } from '../types';
 
 const api = axios.create({
@@ -110,7 +111,8 @@ export const storyApi = {
       },
     }),
 
-  complete: (id: number) => api.patch<Story>(`/stories/${id}/complete`),
+  updateStatus: (id: number, status: 'active' | 'paused' | 'completed') =>
+    api.patch<Story>(`/stories/${id}/status`, { status }),
 };
 
 // Contribution endpoints
@@ -166,6 +168,16 @@ export const adminApi = {
   ) => api.patch<Contribution>(`/admin/contributions/${id}`, { contribution: data }),
 
   deleteContribution: (id: number) => api.delete<{ message: string }>(`/admin/contributions/${id}`),
+
+  // Invitations
+  listInvitations: () => api.get<AdminInvitation[]>('/admin/invitations'),
+
+  getInvitation: (id: number) => api.get<AdminInvitation>(`/admin/invitations/${id}`),
+
+  impersonateInvitation: (id: number) =>
+    api.post<{ message: string; token: string; user: User; user_created: boolean }>(
+      `/admin/invitations/${id}/impersonate`
+    ),
 };
 
 export default api;

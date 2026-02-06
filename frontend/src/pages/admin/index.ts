@@ -6,3 +6,4 @@ export { AdminCirclesPage } from './AdminCirclesPage';
 export { AdminCircleDetailPage } from './AdminCircleDetailPage';
 export { AdminStoriesPage } from './AdminStoriesPage';
 export { AdminStoryDetailPage } from './AdminStoryDetailPage';
+export { AdminInvitationsPage } from './AdminInvitationsPage';

@@ -4,7 +4,8 @@ class Story < ApplicationRecord
   has_many :contributions, -> { order(position: :asc) }, dependent: :destroy
 
   validates :title, presence: true, length: { minimum: 2, maximum: 200 }
-  validates :status, presence: true, inclusion: { in: %w[active completed] }
+  STATUSES = %w[active paused completed].freeze
+  validates :status, presence: true, inclusion: { in: STATUSES }
 
   def word_count
     contributions.sum(:word_count)
@@ -20,5 +21,9 @@ class Story < ApplicationRecord
 
   def complete!
     update!(status: "completed")
+  end
+
+  def accepting_contributions?
+    status == "active"
   end
 end

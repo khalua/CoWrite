@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { circleApi } from '../services/api';
+import { Navbar } from '../components/Navbar';
 
 export function CreateCirclePage() {
   const [name, setName] = useState('');
@@ -44,13 +45,7 @@ export function CreateCirclePage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <nav className="bg-gray-800 border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/dashboard" className="text-2xl font-bold text-yellow-400">
-            CoWrite
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Link to="/dashboard" className="text-yellow-400 hover:text-yellow-300 mb-6 inline-block">

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { circleApi } from '../services/api';
+import { Navbar } from '../components/Navbar';
 import type { Circle } from '../types';
 
 export function DashboardPage() {
-  const { user, logout } = useAuth();
   const [circles, setCircles] = useState<Circle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,30 +18,7 @@ export function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <nav className="bg-gray-800 border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/dashboard" className="text-2xl font-bold text-yellow-400">
-            CoWrite
-          </Link>
-          <div className="flex items-center gap-4">
-            {user?.is_super_admin && (
-              <Link
-                to="/admin"
-                className="px-3 py-1 bg-red-900/50 text-red-400 text-sm font-medium rounded hover:bg-red-900/70 transition"
-              >
-                Admin
-              </Link>
-            )}
-            <span className="text-gray-400">Hi, {user?.name}</span>
-            <button
-              onClick={() => logout()}
-              className="text-gray-400 hover:text-gray-200"
-            >
-              Log out
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { circleApi, storyApi } from '../services/api';
+import { Navbar } from '../components/Navbar';
 import type { Circle, Story } from '../types';
 
 export function CirclePage() {
@@ -11,14 +12,16 @@ export function CirclePage() {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteStatus, setInviteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [circleCount, setCircleCount] = useState<number>(0);
 
   useEffect(() => {
     if (!id) return;
 
-    Promise.all([circleApi.get(Number(id)), storyApi.list(Number(id))])
-      .then(([circleRes, storiesRes]) => {
+    Promise.all([circleApi.get(Number(id)), storyApi.list(Number(id)), circleApi.list()])
+      .then(([circleRes, storiesRes, circlesRes]) => {
         setCircle(circleRes.data);
         setStories(storiesRes.data);
+        setCircleCount(circlesRes.data.length);
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));
@@ -55,9 +58,11 @@ export function CirclePage() {
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-4">Circle not found</h1>
-          <Link to="/dashboard" className="text-yellow-300 hover:text-yellow-300">
-            Back to dashboard
-          </Link>
+          {circleCount > 1 && (
+            <Link to="/dashboard" className="text-yellow-300 hover:text-yellow-300">
+              Back to dashboard
+            </Link>
+          )}
         </div>
       </div>
     );
@@ -65,18 +70,14 @@ export function CirclePage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <nav className="bg-gray-800 border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/dashboard" className="text-2xl font-bold text-yellow-300">
-            CoWrite
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
       <main className="container mx-auto px-4 py-8">
-        <Link to="/dashboard" className="text-yellow-300 hover:text-yellow-300 mb-6 inline-block">
-          ← Back to dashboard
-        </Link>
+        {circleCount > 1 && (
+          <Link to="/dashboard" className="text-yellow-300 hover:text-yellow-300 mb-6 inline-block">
+            ← Back to dashboard
+          </Link>
+        )}
 
         <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8 mb-8">
           <div className="flex justify-between items-start mb-6">
@@ -84,12 +85,20 @@ export function CirclePage() {
               <h1 className="text-3xl font-bold text-white mb-2">{circle.name}</h1>
               {circle.description && <p className="text-gray-400">{circle.description}</p>}
             </div>
-            <button
-              onClick={() => setShowInviteModal(true)}
-              className="px-4 py-2 border border-yellow-400 text-yellow-300 rounded-lg hover:bg-yellow-400/10 transition"
-            >
-              + Invite Member
-            </button>
+            <div className="flex gap-3">
+              <Link
+                to="/create-circle"
+                className="px-4 py-2 border border-gray-500 text-gray-300 rounded-lg hover:bg-gray-700 transition"
+              >
+                + New Circle
+              </Link>
+              <button
+                onClick={() => setShowInviteModal(true)}
+                className="px-4 py-2 border border-yellow-400 text-yellow-300 rounded-lg hover:bg-yellow-400/10 transition"
+              >
+                + Invite Member
+              </button>
+            </div>
           </div>
 
           <div className="flex gap-2 flex-wrap">
@@ -133,34 +142,75 @@ export function CirclePage() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-4">
-            {stories.map((story) => (
-              <Link
-                key={story.id}
-                to={`/stories/${story.id}`}
-                className="bg-gray-800 rounded-xl border border-gray-700 p-6 hover:border-gray-600 transition"
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-white">{story.title}</h3>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      story.status === 'active'
-                        ? 'bg-green-800/50 text-green-300'
-                        : 'bg-gray-700 text-gray-400'
-                    }`}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {stories.map((story, index) => {
+              const coverColors = [
+                'from-amber-700 to-amber-900',
+                'from-emerald-700 to-emerald-900',
+                'from-blue-700 to-blue-900',
+                'from-purple-700 to-purple-900',
+                'from-rose-700 to-rose-900',
+                'from-cyan-700 to-cyan-900',
+                'from-orange-700 to-orange-900',
+                'from-indigo-700 to-indigo-900',
+              ];
+              const colorClass = coverColors[index % coverColors.length];
+
+              return (
+                <Link
+                  key={story.id}
+                  to={`/stories/${story.id}`}
+                  className="group"
+                >
+                  <div
+                    className={`relative aspect-[2/3] bg-gradient-to-br ${colorClass} rounded-sm shadow-lg transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl overflow-hidden`}
                   >
-                    {story.status}
-                  </span>
-                </div>
-                {story.prompt && (
-                  <p className="text-gray-400 mb-4 line-clamp-2">{story.prompt}</p>
-                )}
-                <div className="flex gap-4 text-sm text-gray-500">
-                  <span>{story.contributions_count} contributions</span>
-                  <span>{story.word_count} words</span>
-                </div>
-              </Link>
-            ))}
+                    {/* Book spine effect */}
+                    <div className="absolute left-0 top-0 bottom-0 w-3 bg-black/20" />
+
+                    {/* Cover content */}
+                    <div className="absolute inset-0 p-4 flex flex-col">
+                      {/* Status badge */}
+                      <div className="flex justify-end mb-2">
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
+                            story.status === 'active'
+                              ? 'bg-green-500/30 text-green-200'
+                              : 'bg-black/30 text-gray-300'
+                          }`}
+                        >
+                          {story.status}
+                        </span>
+                      </div>
+
+                      {/* Title area */}
+                      <div className="flex-1 flex flex-col justify-center px-2">
+                        <h3 className="text-white font-serif font-bold text-center leading-tight line-clamp-4 text-sm sm:text-base">
+                          {story.title}
+                        </h3>
+                      </div>
+
+                      {/* Bottom decorative line */}
+                      <div className="mt-auto">
+                        <div className="h-px bg-white/20 mb-3" />
+                        <div className="text-center text-white/60 text-[10px] space-y-0.5">
+                          <div>{story.contributions_count} contributions</div>
+                          <div>{story.word_count} words</div>
+                          <div className="pt-1 text-white/40">
+                            {new Date(story.updated_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Page edges effect on right */}
+                    <div className="absolute right-0 top-2 bottom-2 w-1 flex flex-col justify-between">
+                      <div className="h-full bg-gradient-to-l from-white/10 to-transparent" />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </main>

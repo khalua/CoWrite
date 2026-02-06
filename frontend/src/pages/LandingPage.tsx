@@ -5,7 +5,7 @@ export function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="container mx-auto px-4 py-16">
         <nav className="flex justify-between items-center mb-16">
-          <h1 className="text-3xl font-bold text-white">CoWrite</h1>
+          <h1 className="text-3xl font-display italic text-yellow-400">CoWrite</h1>
           <div className="space-x-4">
             <Link
               to="/login"
@@ -15,7 +15,7 @@ export function LandingPage() {
             </Link>
             <Link
               to="/register"
-              className="px-6 py-2 bg-yellow-400 text-white rounded-full font-semibold hover:bg-yellow-500 transition"
+              className="px-6 py-2 bg-yellow-400 text-black rounded-full font-semibold hover:bg-yellow-500 transition"
             >
               Sign Up
             </Link>
@@ -23,9 +23,14 @@ export function LandingPage() {
         </nav>
 
         <main className="text-center max-w-4xl mx-auto">
-          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6">
-            Write Stories
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-300">
+          <h2 className="text-5xl md:text-7xl mb-6 leading-[1.1] tracking-tight">
+            <span className="block font-display italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400">
+              CoWrite
+            </span>
+            <span className="block font-sans font-semibold text-white">
+              Helps You Craft Stories
+            </span>
+            <span className="block font-display italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400 pb-2">
               Together
             </span>
           </h2>
@@ -37,15 +42,9 @@ export function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               to="/register"
-              className="px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-400 text-white rounded-full font-bold text-lg hover:opacity-90 transition shadow-lg"
+              className="px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-400 text-black rounded-full font-bold text-lg hover:opacity-90 transition shadow-lg"
             >
               Start Writing
-            </Link>
-            <Link
-              to="/how-it-works"
-              className="px-8 py-4 border-2 border-gray-600 text-gray-300 rounded-full font-bold text-lg hover:bg-gray-800 transition"
-            >
-              How It Works
             </Link>
           </div>
 

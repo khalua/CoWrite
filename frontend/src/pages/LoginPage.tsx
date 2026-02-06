@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { invitationApi } from '../services/api';
+import { circleApi, invitationApi } from '../services/api';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -28,11 +28,17 @@ export function LoginPage() {
           navigate(`/circles/${response.data.id}`);
           return;
         } catch {
-          // If invitation fails, still proceed to dashboard
+          // If invitation fails, still proceed based on circle count
         }
       }
 
-      navigate('/dashboard');
+      // Check circle count to determine redirect
+      const circlesRes = await circleApi.list();
+      if (circlesRes.data.length === 1) {
+        navigate(`/circles/${circlesRes.data[0].id}`);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: unknown) {
       // Extract error message from axios error response or use default
       const axiosError = err as { response?: { data?: { error?: string } } };

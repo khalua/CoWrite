@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { storyApi } from '../services/api';
+import { Navbar } from '../components/Navbar';
 
 const storyPrompts = [
   'One day I woke up and realized all the hair on my bald head had grown back. ',
@@ -53,13 +54,7 @@ export function NewStoryPage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <nav className="bg-gray-800 border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/dashboard" className="text-2xl font-bold text-yellow-300">
-            CoWrite
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Link

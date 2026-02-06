@@ -1,8 +1,8 @@
 class Api::StoriesController < Api::BaseController
   before_action :set_circle, only: [:index, :create]
-  before_action :set_story, only: [:show, :complete]
+  before_action :set_story, only: [:show, :update_status]
   before_action :authorize_circle_access!, only: [:index, :create]
-  before_action :authorize_story_access!, only: [:show, :complete]
+  before_action :authorize_story_access!, only: [:show, :update_status]
 
   def index
     stories = @circle.stories.includes(:contributions, :starter)
@@ -34,8 +34,17 @@ class Api::StoriesController < Api::BaseController
     render json: { error: e.record.errors.full_messages.join(", ") }, status: :unprocessable_entity
   end
 
-  def complete
-    @story.complete!
+  def update_status
+    unless current_user.id == @story.started_by_id || super_admin?
+      return render json: { error: "Only the story creator can change the status" }, status: :forbidden
+    end
+
+    new_status = params[:status]
+    unless Story::STATUSES.include?(new_status)
+      return render json: { error: "Invalid status. Must be one of: #{Story::STATUSES.join(', ')}" }, status: :unprocessable_entity
+    end
+
+    @story.update!(status: new_status)
     render json: story_json(@story)
   end
 
@@ -78,6 +87,7 @@ class Api::StoriesController < Api::BaseController
       started_by_id: story.started_by_id,
       status: story.status,
       created_at: story.created_at,
+      updated_at: story.updated_at,
       contributions_count: story.contributions_count,
       word_count: story.word_count
     }

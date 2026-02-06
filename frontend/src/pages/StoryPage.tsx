@@ -4,6 +4,7 @@ import { storyApi, contributionApi } from '../services/api';
 import { subscribeToStory, unsubscribe, type ContributionData, type Subscription } from '../services/cable';
 import { useAuth } from '../contexts/AuthContext';
 import { ContributorCard } from '../components/ContributorCard';
+import { Navbar } from '../components/Navbar';
 import type { Story } from '../types';
 
 type ConnectionStatus = 'connecting' | 'connected' | 'disconnected';
@@ -49,7 +50,16 @@ export function StoryPage() {
   const [startNewParagraph, setStartNewParagraph] = useState(false);
   const [editStartNewParagraph, setEditStartNewParagraph] = useState(false);
 
+  // Inspiration modal state
+  const [showInspirationModal, setShowInspirationModal] = useState(false);
+  const [inspirationImage, setInspirationImage] = useState<string | null>(null);
+  const [isLoadingInspiration, setIsLoadingInspiration] = useState(false);
+
+  // Status change state
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
+
   const isSuperAdmin = user?.is_super_admin ?? false;
+  const isCreator = user?.id === story?.started_by_id;
 
   // Handle contribution update from WebSocket
   const handleContributionUpdated = useCallback((contribution: ContributionData) => {
@@ -184,6 +194,29 @@ export function StoryPage() {
   };
 
   const wordCount = newContent.trim().split(/\s+/).filter(Boolean).length;
+
+  const fetchInspirationImage = useCallback(() => {
+    setIsLoadingInspiration(true);
+    // Using Lorem Picsum for random beautiful images
+    // Random seed ensures a different image each time
+    const randomSeed = Math.random().toString(36).substring(7);
+    const imageUrl = `https://picsum.photos/seed/${randomSeed}/800/600`;
+    setInspirationImage(imageUrl);
+    setShowInspirationModal(true);
+  }, []);
+
+  const handleStatusChange = async (newStatus: 'active' | 'paused' | 'completed') => {
+    if (!story || newStatus === story.status) return;
+    setIsChangingStatus(true);
+    try {
+      const res = await storyApi.updateStatus(story.id, newStatus);
+      setStory({ ...story, status: res.data.status });
+    } catch (err) {
+      console.error('Failed to update status:', err);
+    } finally {
+      setIsChangingStatus(false);
+    }
+  };
 
   const handleEditContribution = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -322,40 +355,28 @@ export function StoryPage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <nav className="bg-gray-800 border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Link to="/dashboard" className="text-2xl font-bold text-yellow-300">
-              CoWrite
-            </Link>
-            {isSuperAdmin && (
-              <span className="px-2 py-1 bg-red-900/50 text-red-400 text-xs font-semibold rounded">
-                SUPER ADMIN
-              </span>
-            )}
-          </div>
-          {story.status === 'active' && (
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  connectionStatus === 'connected'
-                    ? 'bg-green-500'
-                    : connectionStatus === 'connecting'
-                    ? 'bg-yellow-400 animate-pulse'
-                    : 'bg-red-500'
-                }`}
-              />
-              <span className="text-sm text-gray-400">
-                {connectionStatus === 'connected'
-                  ? 'Live'
+      <Navbar>
+        {story.status === 'active' && (
+          <div className="flex items-center gap-2">
+            <div
+              className={`w-2 h-2 rounded-full ${
+                connectionStatus === 'connected'
+                  ? 'bg-green-500'
                   : connectionStatus === 'connecting'
-                  ? 'Connecting...'
-                  : 'Offline'}
-              </span>
-            </div>
-          )}
-        </div>
-      </nav>
+                  ? 'bg-yellow-400 animate-pulse'
+                  : 'bg-red-500'
+              }`}
+            />
+            <span className="text-sm text-gray-400">
+              {connectionStatus === 'connected'
+                ? 'Live'
+                : connectionStatus === 'connecting'
+                ? 'Connecting...'
+                : 'Offline'}
+            </span>
+          </div>
+        )}
+      </Navbar>
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Link
@@ -368,15 +389,36 @@ export function StoryPage() {
         <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8 mb-6">
           <div className="flex justify-between items-start mb-4">
             <h1 className="text-3xl font-bold text-white">{story.title}</h1>
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                story.status === 'active'
-                  ? 'bg-green-800/50 text-green-300'
-                  : 'bg-gray-700 text-gray-400'
-              }`}
-            >
-              {story.status}
-            </span>
+            {(isCreator || isSuperAdmin) ? (
+              <select
+                value={story.status}
+                onChange={(e) => handleStatusChange(e.target.value as 'active' | 'paused' | 'completed')}
+                disabled={isChangingStatus}
+                className={`px-3 py-1 rounded-full text-sm font-semibold cursor-pointer outline-none border-0 ${
+                  story.status === 'active'
+                    ? 'bg-green-800/50 text-green-300'
+                    : story.status === 'paused'
+                    ? 'bg-yellow-800/50 text-yellow-300'
+                    : 'bg-gray-700 text-gray-400'
+                } disabled:opacity-50`}
+              >
+                <option value="active" className="bg-gray-800">active</option>
+                <option value="paused" className="bg-gray-800">paused</option>
+                <option value="completed" className="bg-gray-800">completed</option>
+              </select>
+            ) : (
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                  story.status === 'active'
+                    ? 'bg-green-800/50 text-green-300'
+                    : story.status === 'paused'
+                    ? 'bg-yellow-800/50 text-yellow-300'
+                    : 'bg-gray-700 text-gray-400'
+                }`}
+              >
+                {story.status}
+              </span>
+            )}
           </div>
 
           <div className="flex gap-4 text-sm text-gray-400 mb-6">
@@ -576,7 +618,20 @@ export function StoryPage() {
                 placeholder="Continue the story..."
               />
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">{wordCount} words</span>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-400">{wordCount} words</span>
+                  <button
+                    type="button"
+                    onClick={fetchInspirationImage}
+                    disabled={isLoadingInspiration}
+                    className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition disabled:opacity-50 flex items-center gap-2"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Inspiration
+                  </button>
+                </div>
                 <button
                   type="submit"
                   disabled={isSubmitting || !newContent.trim()}
@@ -594,6 +649,12 @@ export function StoryPage() {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {story.status === 'paused' && !isSuperAdmin && (
+          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 text-center">
+            <p className="text-gray-400">This story is paused. The creator will reopen it soon.</p>
           </div>
         )}
 
@@ -692,6 +753,64 @@ export function StoryPage() {
                   </div>
                 )}
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Inspiration Modal */}
+        {showInspirationModal && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-2xl w-full mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-white">Inspiration</h3>
+                <button
+                  onClick={() => setShowInspirationModal(false)}
+                  className="text-gray-400 hover:text-white transition"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="relative aspect-[4/3] bg-gray-900 rounded-lg overflow-hidden mb-4">
+                {inspirationImage && (
+                  <img
+                    src={inspirationImage}
+                    alt="Inspiration"
+                    className="w-full h-full object-cover"
+                    onLoad={() => setIsLoadingInspiration(false)}
+                  />
+                )}
+                {isLoadingInspiration && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+                  </div>
+                )}
+              </div>
+
+              <p className="text-gray-400 text-sm text-center mb-4">
+                Let this image spark your imagination. What story could it tell?
+              </p>
+
+              <div className="flex justify-center gap-3">
+                <button
+                  onClick={fetchInspirationImage}
+                  disabled={isLoadingInspiration}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50 flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  New Image
+                </button>
+                <button
+                  onClick={() => setShowInspirationModal(false)}
+                  className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -37,8 +37,9 @@ export interface Story {
   prompt?: string;
   circle_id: number;
   started_by_id: number;
-  status: 'active' | 'completed';
+  status: 'active' | 'paused' | 'completed';
   created_at: string;
+  updated_at: string;
   contributions: Contribution[];
   contributions_count: number;
   word_count: number;
@@ -110,7 +111,7 @@ export interface AdminCircle {
   stories: Array<{
     id: number;
     title: string;
-    status: 'active' | 'completed';
+    status: 'active' | 'paused' | 'completed';
     contributions_count: number;
     created_at: string;
   }>;
@@ -120,7 +121,7 @@ export interface AdminStory {
   id: number;
   title: string;
   prompt?: string;
-  status: 'active' | 'completed';
+  status: 'active' | 'paused' | 'completed';
   created_at: string;
   contributions_count: number;
   word_count: number;
@@ -149,4 +150,19 @@ export interface AdminStoryDetail extends AdminStory {
       written_at: string;
     };
   }>;
+}
+
+export interface AdminInvitation {
+  id: number;
+  email: string;
+  token: string;
+  status: 'pending' | 'accepted' | 'expired';
+  expires_at: string;
+  expired: boolean;
+  created_at: string;
+  circle: {
+    id: number;
+    name: string;
+  };
+  inviter: UserSummary;
 }
